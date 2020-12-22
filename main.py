@@ -13,15 +13,15 @@ class ProBar(object):
     """
     用于显示进度条！
     """
-    _ProgrossBar: Tk
+    _ProgressBar: Tk
 
     def __init__(self, count):
         self.count = count
-        self._ProgrossBar = Tk()
-        self._ProgrossBar.title('正在获取评论区所有的用户，请稍候....')
+        self._ProgressBar = Tk()
+        self._ProgressBar.title('正在获取评论区所有的用户，请稍候....')
         # 设置窗口居中
         # max_w:屏幕最大宽度,max_h:屏幕最大高度
-        max_w, max_h = self._ProgrossBar.maxsize()
+        max_w, max_h = self._ProgressBar.maxsize()
         # 窗口的宽度和高度
         wiw = 800
         wih = 200
@@ -29,21 +29,21 @@ class ProBar(object):
         cen_x = (max_w / 2) - (wiw / 2)
         cen_y = (max_h / 2) - (wih / 2)
         # 设置窗口大小和位置
-        self._ProgrossBar.geometry('%dx%d+%d+%d' % (wiw, wih, cen_x, cen_y))
-        self._ProgrossBar.resizable(False, False)
-        self._ProgrossBar.config(bg='#535353')
-        self.canvas_progress_bar = Canvas(self._ProgrossBar, width=630, height=20)
+        self._ProgressBar.geometry('%dx%d+%d+%d' % (wiw, wih, cen_x, cen_y))
+        self._ProgressBar.resizable(False, False)
+        self._ProgressBar.config(bg='#535353')
+        self.canvas_progress_bar = Canvas(self._ProgressBar, width=630, height=20)
         self.canvas_shape = self.canvas_progress_bar.create_rectangle(0, 0, 0, 25, fill='green')
         self.canvas_text = self.canvas_progress_bar.create_text(292, 4, anchor=NW)
         self.canvas_progress_bar.itemconfig(self.canvas_text, text='00:00:00')
         self.var_progress_bar_percent = StringVar()
         self.var_progress_bar_percent.set('00.00  %')
-        self.label_progress_bar_percent = Label(self._ProgrossBar, textvariable=self.var_progress_bar_percent,
+        self.label_progress_bar_percent = Label(self._ProgressBar, textvariable=self.var_progress_bar_percent,
                                                 fg='#F5F5F5', bg='#535353')
         self.canvas_progress_bar.place(relx=0.45, rely=0.4, anchor=CENTER)
         self.label_progress_bar_percent.place(relx=0.89, rely=0.4, anchor=CENTER)
-        # 按钮
-        # self._ProgrossBar.mainloop()
+
+        # self._ProgressBar.mainloop()
 
     def update_progress_bar(self, steps):
         percent = int((steps / self.count) * 100)
@@ -56,23 +56,25 @@ class ProBar(object):
         self.canvas_progress_bar.itemconfig(self.canvas_text, text='%02d:%02d:%02d' % (hour, minute, second))
         self.var_progress_bar_percent.set('%0.2f  %%' % percent)
         if steps == self.count:
-            self._ProgrossBar.quit()
+            self._ProgressBar.quit()
         else:
             pass
-        self._ProgrossBar.update()
+        self._ProgressBar.update()
 
 
 def av2bv(avid):
     site = "https://api.bilibili.com/x/web-interface/view?aid=" + str(avid)
     lst = codecs.decode(requests.get(site).content, "utf-8").split("\"")
-    if int(lst[2][1:-1]) != 0: return 0
+    if int(lst[2][1:-1]) != 0:
+        return 0
     return lst[13]
 
 
 def bv2av(bvid):
     site = "https://api.bilibili.com/x/web-interface/view?bvid=" + bvid
     lst = codecs.decode(requests.get(site).content, "utf-8").split("\"")
-    if int(lst[2][1:-1]) != 0: return 0
+    if int(lst[2][1:-1]) != 0:
+        return 0
     return int(lst[16][1:-1])
 
 
@@ -121,5 +123,3 @@ def getRandom(minNum, maxNum, count):
 if __name__ == '__main__':
     aid = bv2av("BV1PZ4y157rW")
     getAllcoment(aid)
-    print('PyCharm')
-
