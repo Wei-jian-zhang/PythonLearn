@@ -57,10 +57,10 @@ class ProBar(object):
         self.var_progress_bar_percent.set('%0.2f  %%' % percent)
         if steps == self.count:
             self._ProgressBar.destroy()
-            RegisterPage()
+            mainPage()
         else:
-            pass
-        self._ProgressBar.update()
+            self._ProgressBar.update()
+
 
 
 class StartPage(object):
@@ -117,7 +117,7 @@ class StartPage(object):
         self.root.mainloop()
 
 
-class RegisterPage(object):
+class mainPage(object):
     """
     注册页面
     """
