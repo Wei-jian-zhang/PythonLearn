@@ -62,7 +62,6 @@ class ProBar(object):
             self._ProgressBar.update()
 
 
-
 class StartPage(object):
     """
     登陆页面
@@ -79,7 +78,7 @@ class StartPage(object):
             messagebox.showinfo('提示', '请输入有效的AV/BV号！')
         else:
             aid = abid[0:2]
-            print(aid)
+
             if aid.lower() == "av":
                 if av2bv(abid) == 0:
                     messagebox.showinfo('提示', '无效的AV／BV号!')
@@ -130,15 +129,65 @@ class mainPage(object):
 
     def __init__(self):
         self.root = Tk()
+        # 设置窗口居中
+        # max_w:屏幕最大宽度,max_h:屏幕最大高度
+        max_w, max_h = self.root.maxsize()
+        # 窗口的宽度和高度
+        wiw = 800
+        wih = 400
+        # 计算中心坐标
+        cen_x = (max_w / 2) - (wiw / 2)
+        cen_y = (max_h / 2) - (wih / 2)
+        self.root.geometry('%dx%d+%d+%d' % (wiw, wih, cen_x, cen_y))
+        self.root.resizable(False, False)
 
-        Label(self.root, text="用户").grid(row=0, column=0)
-        Entry(self.root).grid(row=0, column=1, columnspan=2)
-        Label(self.root, text="密码").grid(row=1, column=0)
-        Entry(self.root, show="*").grid(row=1, column=1, columnspan=2)
-        Label(self.root, text="确认").grid(row=2, column=0)
-        Entry(self.root, show="*").grid(row=2, column=1, columnspan=2)
-        Button(self.root, text="注册").grid(row=3, column=1)
-        Button(self.root, text="返回", command=self.bf_goLogin).grid(row=3, column=2, )
+        iframe = Frame(self.root)
+
+        lb = Listbox(iframe, height=200, width=600)
+        scr = Scrollbar(iframe)
+
+        lb.config(yscrollcommand=scr.set)
+        scr.config(command=lb.yview)
+        with open("Data\\data.json") as file_obj:
+            users = json.load(file_obj)
+
+        userlist = users["user"]
+        usernumber = len(userlist)
+
+        for i in range(0, usernumber - 1):
+            lb.insert(END, userlist[i])
+
+        lb.pack(side=LEFT, fill=Y)
+        scr.pack(side=RIGHT, fill=Y)
+
+        iframe.place(relx=0.0, rely=0.222, relheight=0.789, relwidth=0.999)
+
+        self.Button1 = Button(self.root)
+        self.Button1.place(relx=0.281, rely=0.133, height=28, width=49)
+        self.Button1.configure(activebackground="#ececec")
+        self.Button1.configure(activeforeground="#000000")
+        self.Button1.configure(background="#d9d9d9")
+        self.Button1.configure(disabledforeground="#a3a3a3")
+        self.Button1.configure(foreground="#000000")
+        self.Button1.configure(highlightbackground="#d9d9d9")
+        self.Button1.configure(highlightcolor="black")
+        self.Button1.configure(pady="0")
+        self.Button1.configure(text="Button1")
+
+        self.Entry1 = Entry(self.root)
+        self.Entry1.place(relx=0.163, rely=0.133, height=27, relwidth=0.109)
+        self.Entry1.configure(background="white")
+        self.Entry1.configure(disabledforeground="#a3a3a3")
+        self.Entry1.configure(font="TkFixedFont")
+        self.Entry1.configure(foreground="#000000")
+        self.Entry1.configure(insertbackground="black")
+
+        self.Label1 = Label(self.root)
+        self.Label1.place(relx=0.015, rely=0.133, height=23, width=97)
+        self.Label1.configure(background="#d9d9d9")
+        self.Label1.configure(disabledforeground="#a3a3a3")
+        self.Label1.configure(foreground="#000000")
+        self.Label1.configure(text="Label")
 
         self.root.mainloop()
 
@@ -168,19 +217,26 @@ def getAllcoment(av_id):
     # 这个json里不只有用户id ，而且能找到用户评论，楼中楼的用户ID 评论等
     user_list = []  # 保存用户名
     pb = ProBar(page_count)
+
     for pg_num in range(1, page_count + 1):  # 循环获取所有页面上的用户名，这地方运行速度慢，后续尝试利用多线程加快速度
         time.sleep(1)
         print('爬取第{}页...'.format(pg_num))
-        pb.update_progress_bar(pg_num)
         r = requests.get(
             'https://api.bilibili.com/x/v2/reply?jsonp=jsonp&pn={}&type=1&oid={}&sort=2'.format(pg_num, av_id))
         data = json.loads(r.text)
-        for i in data['data']['replies']:  # 每页有20层楼，遍历这20层楼获取ID
-            user_list.append(i['member']['uname'])
+        print(data['data']['replies'])
+        if data['data']['replies'] is None:
+            pass
+        else:
+            for i in data['data']['replies']:
+                user_list.append(i['member']['uname'])
+        pb.update_progress_bar(pg_num)
 
     set(user_list)
-
-    return user_list
+    tempdata = {'user': user_list}
+    with open("Data\\data.json", 'w') as file_json:
+        file_json.write(json.dumps(tempdata))
+        file_json.close()
 
 
 def getPageNum(av_id):
