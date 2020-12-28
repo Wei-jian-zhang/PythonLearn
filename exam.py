@@ -1,48 +1,64 @@
-import random
-
 '''
-2020.12.25
-1.数字a从0开始每次递增1，数字b从1开始每次递增2，数字C从2开始每次递增3，求：当三个数字递增到200时，a b c有几次相等。
+输入三个整数x,y,z，请把这三个数由小到大输出。
 '''
+list = []
+x = int(input("输入一个整数："))
+y = int(input("请输入一个整数："))
+z = int(input("请输入一个整数："))
+list.append(x)
+list.append(y)
+list.append(z)
+list.sort()
+print(list)
+
+"""
+"""
+for i in range(1, 10):
+    print()
+    for j in range(1, i+1):
+        print ("%d*%d=%d" % (i, j, i*j), end=" \t" )
 
 
+"""
+题目：暂停一秒输出。
+
+程序分析：使用 time 模块的 sleep() 函数。
+"""
+import time
+
+l = [1, 2, 3, 4]
+for i in range(len(l)):
+    print(l[i])
+    time.sleep(1)  # 暂停一秒输出
 
 
+"""
+题目：判断101-200之间有多少个素数，并输出所有素数。
+
+程序分析：判断素数的方法：用一个数分别去除2到sqrt(这个数)，如果能被整除，则表明此数不是素数，反之是素数。
+"""
+i = []
+for a in range(101,201):
+    for b in range(2,a):
+        if a%b == 0:
+            break
+    else:
+        i.append(a)
+print(i)
+print(len(i))
 
 
-'''
-2.有已知数组alist,数组blist，请输出两个数组中，不相同的数的值的和。
-'''
-alist = [15,20,17,19,135,443,500,900]
-blist = [71,35,49,15,114,533,557,1546]
+"""
+题目：判断101-200之间有多少个素数，并输出所有素数。
 
-
-
-
-
-'''
-3.已知数组tlist,将他从小到大排序，并输出排序后的结果。
-'''
-tlist = [45,1,58,59,77,12,46,76,95,111,777,55,43]
-
-
-
-
-'''
-4.有一盒打印纸，总数为500，第一天用了10张，之后每天都比前一天多用10张，求多久能用完所有的纸。
-'''
-
-
-
-
-'''
-5.数组list1和list2为随机生成的数组，输出他们中间相同的数的和，如果没有相同的数则输出两个数组无相同数字。
-'''
-list1 = []
-s = random.randint(1,20)
-for i in range(0,s):
-    list1.append(random.randint(0,100))
-list2 = []
-for i in range(0,s):
-    list2.append(random.randrange(0,100))
-
+程序分析：判断素数的方法：用一个数分别去除2到sqrt(这个数)，如果能被整除，则表明此数不是素数，反之是素数。
+"""
+i = []
+for a in range(101,201):
+    for b in range(2,a):
+        if a%b == 0:
+            break
+    else:
+        i.append(a)
+print(i)
+print(len(i))
