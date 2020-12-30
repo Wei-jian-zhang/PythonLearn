@@ -1,5 +1,4 @@
-"""
-
+'''
 简易的命令行文件管理系统。
 功能：
 1.用户输入指定路径，显示路径下所有文件和文件夹。
@@ -16,8 +15,8 @@
 9.使用del filename的形式提供文件或者文件夹删除，要提供确实删除的信息。
 
 ps：使用python的os库完成。
+'''
 
-"""
 # -*- coding: utf-8 -*-
 # coding=utf-8
 import os
@@ -35,20 +34,20 @@ def copy(src_path, target_path):
     """
     复制文件或文件夹
     """
-    if os.path.isdir(src_path):
-        filelist1 = os.listdir(src_path)
+    if os.path.isdir(src_path):  #如果src_path是目录
+        filelist1 = os.listdir(src_path)  #返回这个文件夹的名字的列表
         for file in filelist1:
-            path = os.path.join(src_path, file)
-            if os.path.isdir(path):
-                path1 = os.path.join(target_path, file)
-                os.mkdir(path1)
-                copy(path, path1)
+            path = os.path.join(src_path, file) #遍历列表，把目录和文件名合成一个路径
+            if os.path.isdir(path): #如果path是目录
+                path1 = os.path.join(target_path, file) #target_path和file合成一个路径东北关于path1
+                os.mkdir(path1)  #创建一个名为path1的文件夹
+                copy(path, path1) #复制这两个
             else:
-                with open(path, "rb") as f1:
+                with open(path, "rb") as f1: #以二进制形式打开，写入f1读取
                     container = f1.read()
                     path2 = os.path.join(target_path, file)
                     with open(path2, "wb") as f2:
-                        f2.write(container)
+                        f2.write(container)  #二进制形式打开写入
     else:
         print("复制完成")
 
@@ -58,11 +57,11 @@ def Delfile(path, name):
     删除文件或者文件夹
     """
     fpath = path + '/' + name
-    if os.path.exists(fpath):
-        if os.path.isfile(fpath):
-            os.remove(fpath)
+    if os.path.exists(fpath):  #判断路径存在完好
+        if os.path.isfile(fpath):  #判断路径是否为文件
+            os.remove(fpath)  #如果为文件，删除
         if os.path.isdir(fpath):
-            os.removedirs(fpath)
+            os.removedirs(fpath)  #如果fpath为目录,递归删除
 
 
 def Rename_file(path, newname):
@@ -71,13 +70,13 @@ def Rename_file(path, newname):
     """
     if os.path.exists(path):
         if os.path.isdir(path):
-            f = os.path.dirname(path)
+            f = os.path.dirname(path)  #f为返回文件路径
             newfold_name = os.path.join(f, newname)
-            os.rename(path, newfold_name)
-        if os.path.isfile(path):
-            dirname = os.path.dirname(path)
-            New_name = os.path.join(dirname, newname)
-            os.rename(path, New_name)
+            os.rename(path, newfold_name)  #更新为新的名字
+        if os.path.isfile(path):  #如果是文件
+            dirname = os.path.dirname(path)  #返回文件路径
+            New_name = os.path.join(dirname, newname)  #合成为一个路径
+            os.rename(path, New_name)  #改为新的文件名
 
 
 def mkdir(path, foldername):
@@ -85,12 +84,12 @@ def mkdir(path, foldername):
     新建一个新的文件夹，若文件夹存在则不创建
     """
     if os.path.exists(path):
-        if os.path.exists(path + '/' + foldername):
+        if os.path.exists(path + '/' + foldername):  #如果文件已存在
             print("文件夹已经存在,无法创建!")
         else:
-            folderpath = path + '/' + foldername
-            os.mkdir(folderpath)
-            if os.path.exists(folderpath):
+            folderpath = path + '/' + foldername  #合成folderpath文件夹的路径
+            os.mkdir(folderpath)  #创建文件夹
+            if os.path.exists(folderpath):  #检查是否存在
                 print("文件夹", foldername, "创建成功!")
             else:
                 print("文件夹", foldername, "创建成功!")
@@ -100,8 +99,8 @@ def mkfile(path, filename, msg=None):
     """
     新建一个新的文件，若文件存在则不创建
     """
-    if os.path.exists(path):
-        if os.path.exists(path + '/' + filename):
+    if os.path.exists(path):  #判断路径
+        if os.path.exists(path + '/' + filename):  #判断文件
             print("文件已经存在,无法创建!")
         else:
             filepath = path + '/' + filename
@@ -116,7 +115,7 @@ def mkfile(path, filename, msg=None):
             else:
                 f = open(filepath, 'w')
                 f.close()
-                if os.path.exists(filepath):
+                if os.path.exists(filepath):  #如果文件存在
                     print("文件", filename, "创建成功!")
                 else:
                     print("文件", filename, "创建失败!")
@@ -127,13 +126,13 @@ def PrintFoldList(path):
     输出
     """
     i=os.system("cls")
-    pathlist = os.listdir(path)
+    pathlist = os.listdir(path)  #返回path文件的内容
     print("当前路径为：", path)
     print("--------------------------------")
     print('名称'.ljust(20), " 类型")
     print("--------------------------------")
     for f in pathlist:
-        if os.path.isfile(path + '/' + f):
+        if os.path.isfile(path + '/' + f):  #判断此路径是否是文件
             if len(f) < len(f.encode('GBK')):
                 print(f.ljust(20 - (len(f.encode('GBK')) - len(f))), "  文件")
             else:
@@ -154,19 +153,19 @@ def GetUserControl(path, dept):
     control = input()
 
     clist = control.split(' ')
-    if clist is not None:
-        if clist[0].lower() == 'cd':
-            if clist[1] is not None:
-                if clist[1] == "..":
+    if clist is not None:  #如果用户输入的不是空
+        if clist[0].lower() == 'cd':  #将列表输入的第一个字母改为小写
+            if clist[1] is not None:  #如果列表的第二个元素不是空
+                if clist[1] == "..":  #如果第二个元素是..
                     if dept == 0:
                         print("当前已经是根目录！")
                         input("按enter继续")
                         Main(path, dept)
                     else:
-                        Newpath = os.path.abspath(os.path.join(path, ".."))
-                        dept = dept - 1
-                        Main(Newpath, dept)
-                elif clist[1] == ".":
+                        Newpath = os.path.abspath(os.path.join(path, ".."))  #3返回路径的绝对路径
+                        dept = dept - 1  #返回上一层
+                        Main(Newpath, dept)  #重新打开
+                elif clist[1] == ".":  #列表的第二个元素是.
                     print("当前路径为：", path)
                     input("按enter继续")
                     Main(path, dept)
@@ -186,16 +185,16 @@ def GetUserControl(path, dept):
                 print("你请输入正确的路径或者操作符.")
                 input("按enter继续")
                 Main(path, dept)
-        elif clist[0].lower() == 're':
+        elif clist[0].lower() == 're':  #输入的第一个元素是re
             if clist[1] is not None:
-                cPath = path + '/' + clist[1]
-                if os.path.exists(cPath):
+                cPath = path + '/' + clist[1]  #整合文件路径
+                if os.path.exists(cPath):  #判断文件路径是否存在
                     newname = input("请输入新文件或文件夹的名称:")
                     print("将重命名:", clist[1])
                     print("新名称:", newname)
-                    Rename_file(cPath, newname)
+                    Rename_file(cPath, newname)  # 调用更名寒暑表
                     input("按enter继续")
-                    Main(path, dept)
+                    Main(path, dept)   #重新调用函数
                 else:
                     print("你输入的名称不存在当前路径!")
                     GetUserControl(path, dept)
@@ -291,10 +290,10 @@ def Start():
     docstring
     """
     path = input("请输入文件夹路径：")
-    if os.path.exists(path):
-        return path
+    if os.path.exists(path):   #如果文件夹存在
+        return path   #返回路径
     else:
-        print("你输入的路径不存在，请重新输入！")
+        print("你输入的路径不存在，请重新输入！")  #如果路径不存在，重新执行函数
         input("按enter继续")
         Start()
 
