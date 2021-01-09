@@ -8,7 +8,7 @@ from lxml import etree
 url = "https://music.163.com/discover/toplist"  # 网易云每日飙升榜
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"}
-content = requests.get(url)
+content = requests.get(url,headers=headers)
 data = etree.HTML(content.text)
 result = data.xpath('//ul[@class="f-hide"]/li/a/text()')
 # data = etree.HTML(content.text)
